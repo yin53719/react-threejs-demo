@@ -5,7 +5,7 @@ import Loadable from 'react-loadable';
 import Loading from './pages/common/loading-component';
 import Index from './pages/index'
 import todolist from './pages/todolist'
-
+import BoxBufferGeometry from './pages/threejs/BoxBufferGeometry'
 
 
 // 用户中心
@@ -23,7 +23,6 @@ export default () => (
 		<Switch>
 			
 			<Route exact path="/" render={() => {
-				console.log(1111);
 				return <Redirect to="/todolist" push />
 			}} />        
 			{/* 登录 */}
@@ -32,6 +31,8 @@ export default () => (
 			<Route path="/register" component={Register} />
 			{/* 注册 */}
 			<Route path="/todolist" component={todolist} />
+			{/* 汽车3d内景 */}
+			<Route path="/BoxBufferGeometry" component={BoxBufferGeometry} />
 			{/* 首页 */}
 			{/*404页面*/}
 			<Route component={NotFound} />
