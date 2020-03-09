@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-// import * as THREE from 'three';
+import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
-const THREE = window.THREE;
+import { CSS3DObject,CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 
 export default class Login extends Component {
     constructor(props) {
@@ -83,14 +82,14 @@ export default class Login extends Component {
 					element.width = 1026; // 2 pixels extra to close the gap.
 					element.src = side.url;
 
-					var object = new THREE.CSS3DObject( element );
+					var object = new CSS3DObject( element );
 					object.position.fromArray( side.position );
 					object.rotation.fromArray( side.rotation );
 					scene.add( object );
 
 				}
 
-				renderer = new THREE.CSS3DRenderer();
+				renderer = new CSS3DRenderer();
 				renderer.setSize( window.innerWidth/2, window.innerHeight/2 );
                 // 获得渲染后元素，可以改变位置，增加样式
                 const threeDom = _this.refs.threeDom;

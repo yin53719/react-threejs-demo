@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
+import { CSS2DObject,CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+// const THREE = window.THREE;
+
+
 export default class Login extends Component {
     constructor(props) {
         super(props)
@@ -12,12 +16,17 @@ export default class Login extends Component {
 
     componentDidMount(){
         const threeDom = this.refs.threeDom;
+        var MOON_RADIUS = 0.27;
             /**
          * 创建场景对象Scene
          */
         var scene = new THREE.Scene();
         var raycaster = new THREE.Raycaster();
         var mouse = new THREE.Vector2();
+
+        var AxisHelper = THREE.AxisHelper(1000);
+
+         scene.add(AxisHelper)
         /**
          * 创建网格模型
          */
@@ -60,19 +69,43 @@ export default class Login extends Component {
         renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
         threeDom.appendChild(renderer.domElement); //body元素中插入canvas对象
 
+        
+        mesh.add(createdLabel('1',100));
+        mesh.add(createdLabel('2',200));
+
+        labelRenderer = new CSS2DRenderer();
+        labelRenderer.setSize(width, height);
+        labelRenderer.domElement.style.position = "absolute";
+        labelRenderer.domElement.style.top = 0;
+        threeDom.appendChild(labelRenderer.domElement);
+     
+        function createdLabel(text,zindex){
+            var moonDiv = document.createElement("div");
+            moonDiv.className = "label";
+            moonDiv.textContent = text;
+            moonDiv.style.marginTop = "-1em";
+            moonDiv.style.border = 'solid #333 1px'
+            var moonLabel = new CSS2DObject(moonDiv);
+            moonLabel.position.set(0, 0, zindex);
+
+            return moonLabel
+        }
+
         // 渲染函数
         function render() {
       
    
+           
+            labelRenderer.render(scene, camera)
             renderer.render(scene,camera);//执行渲染操作
             // mesh.rotateY(0.01);//每次绕y轴旋转0.01弧度
-        requestAnimationFrame(render);//请求再次执行渲染函数render，渲染下一帧
+            requestAnimationFrame(render);//请求再次执行渲染函数render，渲染下一帧
 
         }
             
         render();
         
-        var objects=[];
+        var objects=[],labelRenderer ;
          
         //监听全局点击事件,通过ray检测选中哪一个object
         threeDom.addEventListener("mousedown", function(event)  {
@@ -97,21 +130,25 @@ export default class Login extends Component {
             }
         }, false)
 
-
+        var yIndex = 1;
         function addmesh(){
+            yIndex++
             // 圆柱  参数：圆柱面顶部、底部直径50,50   高度100  圆周分段数
-        var geometry1 = new THREE.CylinderGeometry( 50, 50, 100, 25 );
-        geometry1.translate(150, 0, 0);
-         var material1 = new THREE.MeshLambertMaterial({
-            color: 0x0000ff
-         }); //材质对象Material
-         var mesh1 = new THREE.Mesh(geometry1, material1); //网格模型对象Mesh
+            var geometry1 = new THREE.CylinderGeometry( 50, 50, 100, 25 );
+            geometry1.translate(0, yIndex*100, 100);
+            var material1 = new THREE.MeshLambertMaterial({
+                color: 0x0000ff
+            }); //材质对象Material
+            var mesh1 = new THREE.Mesh(geometry1, material1); //网格模型对象Mesh
 
-         　　scene.add(mesh1)
+            　　scene.add(mesh1)
         }
     
         var controls = new OrbitControls(camera,renderer.domElement);//创建控件对象
         // 监听鼠标事件，触发渲染函数，更新canvas画布渲染效果
+        controls.addEventListener('change', render);
+
+        var controls1 = new OrbitControls(camera,labelRenderer.domElement);
         controls.addEventListener('change', render);
     }
 

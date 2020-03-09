@@ -23,7 +23,7 @@ export default () => (
 		<Switch>
 			
 			<Route exact path="/" render={() => {
-				return <Redirect to="/todolist" push />
+				return <Redirect to="/baseDemo/demo1" push />
 			}} />        
 			{/* 登录 */}
 			<Route path="/login" component={Login} />
